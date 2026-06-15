@@ -30,6 +30,16 @@ In production the track is resolved from the **request host**. On localhost, app
 
 Or send a `Host:` header (`curl -H 'Host: alpha.ekantikcapital.com' …`).
 
+### Screenshots (optional)
+
+`scripts/shoot.cjs` renders each surface to `/tmp/shots/*.png` for quick visual
+review. It uses `playwright-core` (no bundled browser) and a Chrome you supply:
+
+```bash
+npm run start &                              # server on :3000
+CHROME_PATH=/path/to/chrome npm run shots    # e.g. a Chrome-for-Testing build
+```
+
 ## How "build once, render thrice" works
 
 ```
