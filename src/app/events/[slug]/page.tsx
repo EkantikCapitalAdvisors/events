@@ -11,7 +11,9 @@ import { CategoryTag, SessionTypeTag } from "@/components/CategoryTag";
 import { Scarcity } from "@/components/Scarcity";
 import { RegisterButton } from "@/components/RegisterButton";
 import { RegistrationForm } from "@/components/RegistrationForm";
+import { BookDiscovery } from "@/components/BookDiscovery";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
+import { buildDiscoveryUrl } from "@/lib/discovery";
 
 export const dynamic = "force-dynamic";
 
@@ -62,6 +64,10 @@ export default async function EventDetailPage({
   const event = eventForSlug(trackId, slug);
   if (!event) notFound();
   const short = complianceFor(event.complianceProfile).short;
+  // Discovery CTA only where the lane permits it (advisory + futures).
+  const discoveryHref = track.discoveryUrl
+    ? buildDiscoveryUrl(track.discoveryUrl, { track: trackId, sourceRef })
+    : undefined;
 
   return (
     <main>
@@ -142,6 +148,12 @@ export default async function EventDetailPage({
               {short}
             </p>
           </div>
+
+          {discoveryHref && (
+            <div className="mt-4">
+              <BookDiscovery href={discoveryHref} track={trackId} />
+            </div>
+          )}
         </aside>
       </div>
 

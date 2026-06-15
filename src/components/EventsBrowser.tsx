@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { EkantikEvent, Category } from "@/lib/types";
+import type { TrackId } from "@/lib/tracks";
 import { EventCard } from "./EventCard";
 import { EmptyState } from "./EmptyState";
 import { categoryLabel } from "./CategoryTag";
@@ -21,9 +22,14 @@ type Tab = "upcoming" | "past";
 export function EventsBrowser({
   events,
   sourceRef,
+  track,
+  discoveryHref,
 }: {
   events: EkantikEvent[];
   sourceRef?: string;
+  track?: TrackId;
+  /** Pre-built (attributed) Calendly link; absent on the publisher lane. */
+  discoveryHref?: string;
 }) {
   const [query, setQuery] = useState("");
   const [tab, setTab] = useState<Tab>("upcoming");
@@ -125,7 +131,12 @@ export function EventsBrowser({
 
       <div className="mx-auto max-w-6xl px-6 py-12">
         {filtered.length === 0 ? (
-          <EmptyState tab={tab} hasQuery={query.trim().length > 0} />
+          <EmptyState
+            tab={tab}
+            hasQuery={query.trim().length > 0}
+            track={track}
+            discoveryHref={discoveryHref}
+          />
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((e) => (

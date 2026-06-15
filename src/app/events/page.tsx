@@ -7,6 +7,7 @@ import { EventsBrowser } from "@/components/EventsBrowser";
 import { NotifyMe } from "@/components/NotifyMe";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 import { EventSchema } from "@/components/EventSchema";
+import { buildDiscoveryUrl } from "@/lib/discovery";
 
 export const dynamic = "force-dynamic"; // track resolves per-request (host header)
 
@@ -35,6 +36,9 @@ export default async function EventsPage({
   const track = getTrack(trackId);
   const events = eventsForTrack(trackId);
   const next = nextSession(events);
+  const discoveryHref = track.discoveryUrl
+    ? buildDiscoveryUrl(track.discoveryUrl, { track: trackId, sourceRef })
+    : undefined;
 
   return (
     <main>
@@ -43,7 +47,12 @@ export default async function EventsPage({
 
       <Hero track={track} next={next} sourceRef={sourceRef} />
 
-      <EventsBrowser events={events} sourceRef={sourceRef} />
+      <EventsBrowser
+        events={events}
+        sourceRef={sourceRef}
+        track={trackId}
+        discoveryHref={discoveryHref}
+      />
 
       <NotifyMe
         track={trackId}

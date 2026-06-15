@@ -1,13 +1,21 @@
+import type { TrackId } from "@/lib/tracks";
+import { BookDiscovery } from "./BookDiscovery";
+
 /**
  * Empty state (§3) — "an empty screen is an invitation to act, not dead space."
- * Pushes to the always-on notify-me capture and the on-demand library.
+ * Pushes to the always-on notify-me capture, the on-demand library, and (where
+ * the lane permits) a 1:1 discovery meeting.
  */
 export function EmptyState({
   tab,
   hasQuery,
+  track,
+  discoveryHref,
 }: {
   tab: "upcoming" | "past";
   hasQuery: boolean;
+  track?: TrackId;
+  discoveryHref?: string;
 }) {
   if (hasQuery) {
     return (
@@ -49,6 +57,11 @@ export function EmptyState({
       >
         Notify me of future sessions
       </a>
+      {discoveryHref && track && (
+        <div className="mt-5">
+          <BookDiscovery href={discoveryHref} track={track} tone="muted" />
+        </div>
+      )}
     </div>
   );
 }

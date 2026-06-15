@@ -30,7 +30,21 @@ export interface TrackConfig {
   indexable: boolean;
   /** HubSpot stream tag — three fully isolated streams (§5). */
   hubspotStream: string;
+  /**
+   * Calendly link for a 1:1 discovery meeting, shown when a session time
+   * doesn't work. Set ONLY on lanes where a personalized consultation is an
+   * appropriate next step — advisory (EPIG) and futures (ECFS). Deliberately
+   * absent on the publisher (Alpha) lane: a personalized-call CTA there would
+   * make the public session a solicitation, which the publisher posture and
+   * §6 guardrail forbid (Alpha routes accredited interest via the WF5 bridge).
+   */
+  discoveryUrl?: string;
 }
+
+/** Single Calendly target (env-overridable for staging). */
+const DISCOVERY_URL =
+  process.env.NEXT_PUBLIC_DISCOVERY_URL ??
+  "https://calendly.com/hd-ekantikcapital/30min";
 
 export const TRACKS: Record<TrackId, TrackConfig> = {
   ecfs: {
@@ -46,6 +60,7 @@ export const TRACKS: Record<TrackId, TrackConfig> = {
     gated: false,
     indexable: true,
     hubspotStream: "ecfs",
+    discoveryUrl: DISCOVERY_URL,
   },
   alpha: {
     id: "alpha",
@@ -74,6 +89,8 @@ export const TRACKS: Record<TrackId, TrackConfig> = {
     gated: true,
     indexable: false,
     hubspotStream: "epig",
+    discoveryUrl: DISCOVERY_URL,
+    // Alpha (publisher) intentionally has NO discoveryUrl — see TrackConfig.
   },
 };
 
