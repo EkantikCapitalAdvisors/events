@@ -33,6 +33,16 @@ export async function POST(req: NextRequest) {
     accredited?: boolean;
     sourceRef?: string;
     consent?: boolean;
+    // Lane-specific fields (§8). Captured here so the Phase 2 HubSpot upsert
+    // has everything it needs; the public-lane accreditation self-ID is a
+    // routing signal only (WF5 bridge), never a gate.
+    accreditationSelfId?: string;
+    primaryInterest?: string;
+    futuresTrader?: string;
+    researchInterest?: string;
+    investableAssets?: string;
+    inviteCode?: string;
+    prompt?: string;
   };
   try {
     body = await req.json();
@@ -64,7 +74,26 @@ export async function POST(req: NextRequest) {
       { status: 403 },
     );
   }
+  // Advisory lane is higher-intent: phone + investable-assets band are required
+  // (§8 EPIG form). Public lanes keep these optional / absent.
+  if (event.requiresAccreditation) {
+    if (!body.phone) {
+      return NextResponse.json({ error: "Phone required" }, { status: 422 });
+    }
+    if (!body.investableAssets) {
+      return NextResponse.json(
+        { error: "Investable-assets range required" },
+        { status: 422 },
+      );
+    }
+  }
 
+  // The HubSpot upsert targets the TRACK'S isolated stream (§5) with these
+  // properties — never mixing audiences across lanes:
+  //   email, firstname, lastname, phone, webinar_source_ref,
+  //   accreditation_status (attestation on advisory; self-ID on public),
+  //   research_interest (Alpha), zoom_join_url, webinar_datetime,
+  //   last_webinar_registered.
   const ready = Boolean(process.env.ZOOM_ACCOUNT_ID && process.env.HUBSPOT_TOKEN);
   if (!ready) {
     return NextResponse.json(

@@ -10,7 +10,7 @@ import { LocalTime } from "@/components/LocalTime";
 import { CategoryTag, SessionTypeTag } from "@/components/CategoryTag";
 import { Scarcity } from "@/components/Scarcity";
 import { RegisterButton } from "@/components/RegisterButton";
-import { AddToCalendar } from "@/components/AddToCalendar";
+import { RegistrationForm } from "@/components/RegistrationForm";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
 
 export const dynamic = "force-dynamic";
@@ -120,21 +120,27 @@ export default async function EventDetailPage({
 
         <aside className="lg:sticky lg:top-6 lg:self-start">
           <div className="rounded-lg border border-navy/10 bg-white p-6 shadow-sm">
-            <Scarcity event={event} />
-            <div className="mt-4">
-              <RegisterButton event={event} sourceRef={sourceRef} variant="hero" />
+            <div className="flex items-center justify-between gap-3">
+              <Scarcity event={event} />
+              {event.requiresAccreditation && (
+                <span className="font-mono text-[11px] uppercase tracking-label text-gold-600">
+                  Accredited only
+                </span>
+              )}
             </div>
-            {event.status !== "past" && (
-              <div className="mt-6 border-t border-navy/10 pt-6">
-                <AddToCalendar event={event} />
-              </div>
-            )}
-            {event.requiresAccreditation && (
-              <p className="mt-6 font-mono text-[11px] uppercase tracking-label text-gold-600">
-                Accredited investors only
-              </p>
-            )}
-            <p className="mt-6 text-xs leading-relaxed text-slate">{short}</p>
+
+            <div className="mt-5">
+              {event.status === "past" ? (
+                <RegisterButton event={event} sourceRef={sourceRef} variant="hero" />
+              ) : (
+                // Phase 2 native form (degrades to Zoom link-out until creds).
+                <RegistrationForm event={event} sourceRef={sourceRef} />
+              )}
+            </div>
+
+            <p className="mt-6 border-t border-navy/10 pt-6 text-xs leading-relaxed text-slate">
+              {short}
+            </p>
           </div>
         </aside>
       </div>
