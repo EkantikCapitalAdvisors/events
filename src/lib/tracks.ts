@@ -31,6 +31,19 @@ export interface TrackConfig {
   /** HubSpot stream tag — three fully isolated streams (§5). */
   hubspotStream: string;
   /**
+   * Per-surface introduction (the "Ekantik Approach" context band). Speaks ONLY
+   * this lane's program — no sibling product's name, claims, or figures — so the
+   * §6 guardrail holds. Attorney-gated draft template like all §7 copy.
+   */
+  intro: {
+    /** Program framing line, e.g. "The Ekantik Cash-Flow System". */
+    heading: string;
+    /** What the program is + why these sessions exist (no figures). */
+    body: string;
+    /** Who the program / these sessions are for. */
+    forWhom: string;
+  };
+  /**
    * Calendly link for a 1:1 discovery meeting, shown when a session time
    * doesn't work. Set ONLY on lanes where a personalized consultation is an
    * appropriate next step — advisory (EPIG) and futures (ECFS). Deliberately
@@ -46,6 +59,11 @@ const DISCOVERY_URL =
   process.env.NEXT_PUBLIC_DISCOVERY_URL ??
   "https://calendly.com/hd-ekantikcapital/30min";
 
+/** Legal entity + firm-level conviction — identical on every surface (safe). */
+export const FIRM_NAME = "Ekantik Capital Advisors LLC";
+export const FIRM_LEAD =
+  "Ekantik Capital Advisors LLC is built on a single conviction: disciplined, transparent process beats prediction.";
+
 export const TRACKS: Record<TrackId, TrackConfig> = {
   ecfs: {
     id: "ecfs",
@@ -60,6 +78,12 @@ export const TRACKS: Record<TrackId, TrackConfig> = {
     gated: false,
     indexable: true,
     hubspotStream: "ecfs",
+    intro: {
+      heading: "The Ekantik Cash-Flow System",
+      body: "A rules-based intraday futures methodology — entries, exits, and risk defined in advance, every trade hand-logged, the downside engineered before the upside. These sessions open the rulebook and the record, examined live, so you can judge the approach on its structure rather than its story.",
+      forWhom:
+        "For traders and allocators who want to evaluate a cash-flow approach on how it is built.",
+    },
     discoveryUrl: DISCOVERY_URL,
   },
   alpha: {
@@ -75,6 +99,13 @@ export const TRACKS: Record<TrackId, TrackConfig> = {
     gated: false,
     indexable: true,
     hubspotStream: "alpha-research",
+    intro: {
+      heading: "The Ekantik Alpha Engine",
+      body: "An institutional-grade research process for the self-directed investor — a repeatable pipeline that moves an idea from signal to thesis, with the steps made explicit. These sessions teach the process itself: educational research, openly walked through, never a tip or a personalized recommendation.",
+      forWhom:
+        "For self-directed investors who would rather understand a research process than be handed a pick.",
+    },
+    // Alpha (publisher) has NO discoveryUrl — see TrackConfig.
   },
   epig: {
     id: "epig",
@@ -89,8 +120,13 @@ export const TRACKS: Record<TrackId, TrackConfig> = {
     gated: true,
     indexable: false,
     hubspotStream: "epig",
+    intro: {
+      heading: "The Ekantik 500",
+      body: "A managed approach for a small number of accredited families — institutional discipline, full fiduciary accountability, and capital handled with care. These private briefings cover the methodology and whether it fits your situation, candidly, before any relationship begins.",
+      forWhom:
+        "For accredited investors and families evaluating a fiduciary, full-accountability manager.",
+    },
     discoveryUrl: DISCOVERY_URL,
-    // Alpha (publisher) intentionally has NO discoveryUrl — see TrackConfig.
   },
 };
 

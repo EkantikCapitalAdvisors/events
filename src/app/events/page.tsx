@@ -3,6 +3,7 @@ import { resolveTrack } from "@/lib/resolveTrack";
 import { getTrack } from "@/lib/tracks";
 import { eventsForTrack, nextSession } from "@/lib/events";
 import { Hero } from "@/components/Hero";
+import { Introduction } from "@/components/Introduction";
 import { EventsBrowser } from "@/components/EventsBrowser";
 import { NotifyMe } from "@/components/NotifyMe";
 import { ComplianceFooter } from "@/components/ComplianceFooter";
@@ -46,6 +47,8 @@ export default async function EventsPage({
       {track.indexable && <EventSchema events={events} />}
 
       <Hero track={track} next={next} sourceRef={sourceRef} />
+
+      <Introduction track={track} />
 
       <EventsBrowser
         events={events}
